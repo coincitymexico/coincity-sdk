@@ -1,0 +1,39 @@
+{
+  "name": "coincitymexico/coincity-sdk",
+  "description": "SDK of coincitymexico",
+  "type": "library",
+  "homepage": "https://github.com/coincitymexico/coincity-sdk",
+  "license": "MIT",
+  "suggest": {
+  },
+  "keywords": [
+    "coincity",
+    "sdk"
+  ],
+  "authors": [
+    {
+      "name": "danidoble",
+      "email": "dani.doble.d@hotmail.com"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "php": "^7.4|^8.0",
+    "ext-json": "*",
+    "ext-curl": "*",
+    "danidoble/phpobject": "^0.0.5"
+  },
+  "require-dev": {
+    "symfony/error-handler": "^5.3"
+  },
+  "autoload": {
+    "files": [],
+    "psr-4": {
+      "Coincity\\SDK\\": "Src\\"
+    },
+    "exclude-from-classmap": [
+      "/Tests/"
+    ]
+  },
+  "version": "v0.0.1"
+}
