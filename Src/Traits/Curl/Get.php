@@ -6,18 +6,17 @@
  * @website https://danidoble.com
  */
 
-namespace Coincity\SDK\Curl;
+namespace Coincity\SDK\Traits\Curl;
 use Coincity\SDK\Exceptions\AuthenticityException;
 use Coincity\SDK\Exceptions\AuthException;
 use Coincity\SDK\Exceptions\NotFoundException;
 use Coincity\SDK\Exceptions\NotUrlException;
 use Danidoble\Danidoble;
 
-trait Delete
+trait Get
 {
     /**
      * @param string $route
-     * @param array $data
      * @param string $json
      * @return Danidoble
      * @throws AuthException
@@ -25,12 +24,10 @@ trait Delete
      * @throws NotFoundException
      * @throws NotUrlException
      */
-    protected function delete(string $route, array $data, string $json = ""): Danidoble
+    protected function get(string $route, string $json = ""): Danidoble
     {
         $this->setParams($json);
         $this->setUrl($route . $this->params);
-        $this->setMethod("DELETE");
-        $this->setPostFields($data);
         return $this->response();
     }
 }

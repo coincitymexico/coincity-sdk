@@ -15,11 +15,13 @@ $sdk->setSsl(false);
 $sdk->setWebsite("https://localhost/coincity/dash/api");
 
 $user = new User();
-$user->new_user->nombre = "Daniel";
-$user->new_user->apellido = "Sandoval";
-$user->new_user->email = "dsandoval@coincitymexico.com";
-$user->new_user->password = "misupercontrasena1234567890porqueyolo";
-$user->new_user->empresa = "OWL DESARROLLOS";
+
+
+$user->attributes->nombre = "Daniel";
+$user->attributes->apellido = "Sandoval";
+$user->attributes->email = "dsandoval@coincitymexico.com";
+$user->attributes->password = "misupercontrasena1234567890porqueyolo";
+$user->attributes->empresa = "OWL DESARROLLOS";
 //echo $user;
 dd($user);
 

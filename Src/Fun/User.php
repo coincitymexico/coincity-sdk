@@ -15,13 +15,18 @@ use Coincity\SDK\Exceptions\NotFoundException;
 use Coincity\SDK\Exceptions\NotUrlException;
 use Coincity\SDK\Fun\Attr\AttributesUser;
 use Coincity\SDK\Fun\Interfaces\IUser;
+use Coincity\SDK\Traits\Models\Magic;
 use Danidoble\Danidoble;
 
 class User extends Curl implements IUser
 {
+    use Magic;
 
-    public AttributesUser $new_user;
+    public AttributesUser $attributes;
 
+    /**
+     * @param string|null $token
+     */
     public function __construct(string $token = null)
     {
         parent::__construct($token);
@@ -29,34 +34,12 @@ class User extends Curl implements IUser
         $this->setUserAttributes();
     }
 
-    public function __set($name, $value)
-    {
-        $this->new_user->{$name} = $value;
-    }
-
-    public function __get($name)
-    {
-        if (isset($this->new_user->{$name})) {
-            return $this->new_user->{$name};
-        }
-        return null;
-    }
-    public function __toString()
-    {
-        return json_encode($this->new_user);
-    }
-
-    public function __isset($name)
-    {
-        if (isset($this->new_user->{$name})) {
-            return true;
-        }
-        return false;
-    }
-
+    /**
+     *
+     */
     private function setUserAttributes()
     {
-        $this->new_user = new AttributesUser();
+        $this->attributes = new AttributesUser();
     }
 
     /**
@@ -100,10 +83,10 @@ class User extends Curl implements IUser
     }
 
     /**
-     * @return Danidoble
+     * @return AttributesUser
      */
-    public function newUser(): Danidoble
+    public function newUser(): AttributesUser
     {
-        return $this->new_user;
+        return $this->attributes;
     }
 }

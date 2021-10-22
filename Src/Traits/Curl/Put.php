@@ -6,7 +6,7 @@
  * @website https://danidoble.com
  */
 
-namespace Coincity\SDK\Curl;
+namespace Coincity\SDK\Traits\Curl;
 use Coincity\SDK\Exceptions\AuthenticityException;
 use Coincity\SDK\Exceptions\AuthException;
 use Coincity\SDK\Exceptions\NotFoundException;

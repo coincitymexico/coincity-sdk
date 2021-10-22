@@ -9,11 +9,16 @@
 namespace Coincity\SDK\Curl;
 
 use Coincity\SDK\Credentials;
+use Coincity\SDK\Exceptions\APIException;
 use Coincity\SDK\Exceptions\AuthenticityException;
 use Coincity\SDK\Exceptions\AuthException;
 use Coincity\SDK\Exceptions\NotFoundException;
 use Coincity\SDK\Exceptions\NotUrlException;
 use Coincity\SDK\Interfaces\ICurl;
+use Coincity\SDK\Traits\Curl\Delete;
+use Coincity\SDK\Traits\Curl\Get;
+use Coincity\SDK\Traits\Curl\Post;
+use Coincity\SDK\Traits\Curl\Put;
 use Danidoble\Danidoble;
 
 class Curl extends Credentials implements ICurl
@@ -109,6 +114,8 @@ class Curl extends Credentials implements ICurl
             throw new AuthException("The authentication with API of website failed, please provide a valid Token.");
         } elseif (strpos($response->message, "Credenciales invalidas") !== false) {
             throw new AuthException("The provided token doesn't have enough permissions to access to this resource.");
+        } elseif (isset($response->exception)) {
+            throw new APIException("Hmm! Looks like a joke but sorry it's real my friend. An error occurred in the API.");
         } elseif ($response->message === "") {
             return false;
         }
