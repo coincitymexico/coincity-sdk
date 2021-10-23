@@ -21,7 +21,7 @@ use Coincity\SDK\Traits\Curl\Post;
 use Coincity\SDK\Traits\Curl\Put;
 use Danidoble\Danidoble;
 
-class Curl extends Credentials implements ICurl
+class Configuration extends Credentials implements ICurl
 {
     use Get, Post, Put, Delete;
 
@@ -36,32 +36,47 @@ class Curl extends Credentials implements ICurl
     public function __construct(string $token = null)
     {
         parent::__construct($token);
-        $this->options = [
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_FRESH_CONNECT => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_HTTPHEADER => array(
-                'Accept: application/json',
-                'Authorization: Bearer ' . self::$token,
-            ),
-        ];
+    }
+
+    /**
+     * Set options of cUrl with the token defined
+     * @param null $token
+     */
+    private function bind($token = null)
+    {
+        if ($token !== null) {
+            $this->options = [
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_FRESH_CONNECT => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_HTTPHEADER => array(
+                    'Accept: application/json',
+                    'Authorization: Bearer ' . self::$token,
+                ),
+            ];
+        }
     }
 
     /**
      * @param $url
      * @throws NotUrlException
+     * @throws AuthException
      */
     private function setUrl($url)
     {
         if (trim(trim($url, '/'), "\\") === "" || strpos($url, "..") !== false) {
             throw new NotUrlException("The URI provided is invalid, make a valid route of API is impossible");
         }
+        if (self::$token === null || trim(self::$token) == "") {
+            throw new AuthException("The provided token doesn't valid");
+        }
         $this->curl = curl_init();
         $this->requested_url = self::$website . $url;
+        $this->bind(self::$token);
         $this->options[CURLOPT_URL] = self::$website . $url;
     }
 
@@ -116,7 +131,8 @@ class Curl extends Credentials implements ICurl
             throw new AuthException("The provided token doesn't have enough permissions to access to this resource.");
         } elseif (isset($response->exception)) {
             throw new APIException("Hmm! Looks like a joke but sorry it's real my friend. An error occurred in the API.");
-        } elseif ($response->message === "") {
+        }
+        elseif ($response->message === "") {
             return false;
         }
         return true;

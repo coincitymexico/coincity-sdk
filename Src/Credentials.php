@@ -10,9 +10,10 @@ namespace Coincity\SDK;
 
 use Coincity\SDK\Exceptions\AuthenticityException;
 use Coincity\SDK\Exceptions\NotUrlException;
+use Coincity\SDK\Fun\Abstracts\AParser;
 use Coincity\SDK\Interfaces\ICredentials;
 
-class Credentials implements ICredentials
+class Credentials extends AParser implements ICredentials
 {
     protected static string $insecure_http = "http://";
     protected static string $secure_http = "https://";

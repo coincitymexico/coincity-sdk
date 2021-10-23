@@ -8,19 +8,22 @@
 
 namespace Coincity\SDK\Fun;
 
-use Coincity\SDK\Curl\Curl;
+use Coincity\SDK\Curl\Configuration;
 use Coincity\SDK\Exceptions\AuthenticityException;
 use Coincity\SDK\Exceptions\AuthException;
+use Coincity\SDK\Exceptions\MethodException;
 use Coincity\SDK\Exceptions\NotFoundException;
 use Coincity\SDK\Exceptions\NotUrlException;
 use Coincity\SDK\Fun\Attr\AttributesUser;
+use Coincity\SDK\Fun\Interfaces\IParser;
 use Coincity\SDK\Fun\Interfaces\IUser;
+use Coincity\SDK\Fun\Traits\ParentParser;
 use Coincity\SDK\Traits\Models\Magic;
 use Danidoble\Danidoble;
 
-class User extends Curl implements IUser
+class User extends Configuration implements IUser, IParser
 {
-    use Magic;
+    use Magic, ParentParser;
 
     public AttributesUser $attributes;
 
@@ -35,7 +38,7 @@ class User extends Curl implements IUser
     }
 
     /**
-     *
+     * Make an instance of attributes to this model
      */
     private function setUserAttributes()
     {
@@ -54,6 +57,28 @@ class User extends Curl implements IUser
     private static function getter(string $route, array $params = []): Danidoble
     {
         return (new User())->get($route, json_encode($params));
+    }
+
+    /**
+     * @param string $method
+     * @param string $route
+     * @param array $data
+     * @param array $params
+     * @return Danidoble
+     * @throws AuthException
+     * @throws AuthenticityException
+     * @throws MethodException
+     * @throws NotFoundException
+     * @throws NotUrlException
+     */
+    private function setter(string $method, string $route, array $data = [], array $params = []): Danidoble
+    {
+        if ($method === "POST") {
+            return $this->post($route, $data, json_encode($params));
+        } elseif ($method === "PUT" || $method === "PATCH") {
+            return $this->put($route, $data, json_encode($params));
+        }
+        throw new MethodException("The method requested isn't valid");
     }
 
     /**
@@ -83,10 +108,20 @@ class User extends Curl implements IUser
     }
 
     /**
-     * @return AttributesUser
+     * @return Danidoble
+     * @throws AuthException
+     * @throws AuthenticityException
+     * @throws MethodException
+     * @throws NotFoundException
+     * @throws NotUrlException
      */
-    public function newUser(): AttributesUser
+    public function save(): Danidoble
     {
-        return $this->attributes;
+        if (isset($this->attributes->id)) { // update user
+            return $this->setter('PUT', 'user/' . $this->attributes->getId(), $this->attributes->toReal());
+        }
+        // new user
+        return $this->setter('POST', 'user', $this->attributes->toReal());
     }
+
 }

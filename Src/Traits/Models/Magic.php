@@ -49,4 +49,11 @@ trait Magic
         }
         return false;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getAttributes(){
+        return $this->attributes;
+    }
 }
