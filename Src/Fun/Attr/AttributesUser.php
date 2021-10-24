@@ -46,6 +46,7 @@ class AttributesUser extends AParser implements IAttributesUser, IParser
         'profile_photo_path',
         'user_type',
         'status',
+        'restore_this',
     ];
     /**
      * @var array|string[]
@@ -68,10 +69,11 @@ class AttributesUser extends AParser implements IAttributesUser, IParser
         'profile_photo_path' => 'profile_photo_path',
         'user_type' => 'tipo',
         'status' => 'status',
+        'restore_this' => 'restore_this',
     ];
 
     private array $_append_const = [
-        "origin"
+        "ref"
     ];
 
     /**
@@ -164,12 +166,16 @@ class AttributesUser extends AParser implements IAttributesUser, IParser
     /**
      * Constant of origin of register, if it's an update this is ignored
      */
-    private int $origin = 146; //ref
+    private int $ref = 146; //ref
     /**
      * Status of user, [0 = disabled] [1 = enabled]
      * @var int
      */
     protected int $status = 0;
+    /**
+     * @var bool|null
+     */
+    protected ?bool $restore_this = null;
 
 //    /**
 //     * Discount of user in all orders
@@ -179,17 +185,17 @@ class AttributesUser extends AParser implements IAttributesUser, IParser
 //    protected float $descuento = 0.0;
 
     /**
-     * @return string
+     * @return int
      */
-    public function getId(): string
+    public function getId(): int
     {
         return $this->id;
     }
 
     /**
-     * @param string $id
+     * @param int $id
      */
-    public function setId(string $id): void
+    public function setId(int $id): void
     {
         $this->id = $id;
     }
@@ -482,5 +488,15 @@ class AttributesUser extends AParser implements IAttributesUser, IParser
     public function setProtected(array $protected): void
     {
         $this->protected = $protected;
+    }
+
+    public function getRestoreThis(): ?bool
+    {
+        return $this->restore_this;
+    }
+
+    public function setRestoreThis(?bool $restore_this): void
+    {
+        $this->restore_this = $restore_this;
     }
 }

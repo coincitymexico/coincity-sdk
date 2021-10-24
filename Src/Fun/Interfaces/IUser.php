@@ -15,12 +15,12 @@ interface IUser
     /**
      * @return Danidoble
      */
-    public static function getUsers(): Danidoble;
+    public static function getPaginated(): Danidoble;
 
     /**
      * @param int $id
      * @return Danidoble
      */
-    public static function getUser(int $id): Danidoble;
+    public static function findById(int $id): Danidoble;
 
 }

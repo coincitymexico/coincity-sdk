@@ -89,7 +89,7 @@ class User extends Configuration implements IUser, IParser
      * @throws NotFoundException
      * @throws NotUrlException
      */
-    public static function getUser(int $id): Danidoble
+    public static function findById(int $id): Danidoble
     {
         return self::getter('user/' . $id);
     }
@@ -102,7 +102,7 @@ class User extends Configuration implements IUser, IParser
      * @throws NotFoundException
      * @throws NotUrlException
      */
-    public static function getUsers(int $page = 1): Danidoble
+    public static function getPaginated(int $page = 1): Danidoble
     {
         return self::getter('user', ['page' => $page]);
     }
@@ -120,8 +120,27 @@ class User extends Configuration implements IUser, IParser
         if (isset($this->attributes->id)) { // update user
             return $this->setter('PUT', 'user/' . $this->attributes->getId(), $this->attributes->toReal());
         }
-        // new user
-        return $this->setter('POST', 'user', $this->attributes->toReal());
+        return $this->setter('POST', 'user', $this->attributes->toReal());// new user
     }
 
+    /**
+     * @return Danidoble
+     * @throws AuthException
+     * @throws AuthenticityException
+     * @throws NotFoundException
+     * @throws NotUrlException
+     */
+    public function drop(): Danidoble
+    {
+        if (!isset($this->attributes->id)) {
+            $error = new Danidoble();
+            $error->message = "The identifier of user is required to delete";
+            $error->error = true;
+            $error->errors = [
+                "id" => "The identifier of user is required to delete"
+            ];
+            return $error;
+        }
+        return $this->delete('user/' . $this->attributes->getId(), []);
+    }
 }

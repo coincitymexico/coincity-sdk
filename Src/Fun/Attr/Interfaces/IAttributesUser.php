@@ -11,14 +11,14 @@ namespace Coincity\SDK\Fun\Attr\Interfaces;
 interface IAttributesUser
 {
     /**
-     * @return string
+     * @return int
      */
-    public function getId(): string;
+    public function getId(): int;
 
     /**
-     * @param string $id
+     * @param int $id
      */
-    public function setId(string $id): void;
+    public function setId(int $id): void;
 
     /**
      * @return string
@@ -202,4 +202,13 @@ interface IAttributesUser
      */
     public function setProtected(array $protected): void;
 
+    /**
+     * @return bool|null
+     */
+    public function getRestoreThis(): ?bool;
+
+    /**
+     * @param bool|null $restore_this
+     */
+    public function setRestoreThis(?bool $restore_this): void;
 }

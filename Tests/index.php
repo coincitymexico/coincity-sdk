@@ -8,28 +8,33 @@ use Symfony\Component\ErrorHandler\Debug;
 include_once __DIR__ . '/../vendor/autoload.php';
 
 Debug::enable();
-//zZpFnBfcqJ20SjaMCk3OePhWc5oqUzO2U2WmC8JX // h
+//ZVYEnK984VISZt4jcSzZGn0BSITMM683a0IiKXod // h
 //pxzgpvDe8PR0OUOUeH9OAeZjBNgkNghbtrg4l0i0 // work
 
 $sdk = new Configuration();
-$sdk->setToken('pxzgpvDe8PR0OUOUeH9OAeZjBNgkNghbtrg4l0i0');
+$sdk->setToken('ZVYEnK984VISZt4jcSzZGn0BSITMM683a0IiKXod');
 $sdk->setSsl(false);
 $sdk->setWebsite("https://localhost/coincity/dash/api");
 
 $user = new User();
-$user->attributes->yolo = "suag";
+$user->attributes->setId(1394);
+//$r = $user->drop();dd($r);
 $user->attributes->setName("Pruebas");
 $user->attributes->setLastName("Locas");
-$user->attributes->setEmail("chulin@cololo.com");
+$user->attributes->setRestoreThis(true);
+
+$user->attributes->setEmail("chulin@chulin.com");
+$user->attributes->setEmailAlternative("probando@ando.com");
 $user->attributes->setPassword("12345678");
 $user->attributes->setPasswordConfirm("12345678");
 $user->attributes->empresa = "OWL DESARROLLOS";
+$result = $user->save();
 //echo $user;
-dump($user->save());
+dd($result);
 
 
 $r = new Danidoble();
-$r->paginated = User::getUsers();
-$r->byId = User::getUser(1274);
+$r->paginated = User::getPaginated();
+$r->byId = User::findById(1274);
 
 dd($r);

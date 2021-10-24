@@ -7,6 +7,7 @@
  */
 
 namespace Coincity\SDK\Traits\Curl;
+
 use Coincity\SDK\Exceptions\AuthenticityException;
 use Coincity\SDK\Exceptions\AuthException;
 use Coincity\SDK\Exceptions\NotFoundException;
@@ -30,7 +31,8 @@ trait Put
         $this->setParams($json);
         $this->setUrl($route . $this->params);
         $this->setMethod("PUT");
-        $this->setPostFields($data);
+        $this->setContentType("application/json");
+        $this->setPutFields($data);
         return $this->response();
     }
 }

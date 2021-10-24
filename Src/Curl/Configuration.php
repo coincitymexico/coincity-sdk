@@ -9,6 +9,7 @@
 namespace Coincity\SDK\Curl;
 
 use Coincity\SDK\Credentials;
+use Coincity\SDK\ErrorResponse;
 use Coincity\SDK\Exceptions\APIException;
 use Coincity\SDK\Exceptions\AuthenticityException;
 use Coincity\SDK\Exceptions\AuthException;
@@ -25,6 +26,12 @@ class Configuration extends Credentials implements ICurl
 {
     use Get, Post, Put, Delete;
 
+    private array $requested_data = [
+        "url" => null,
+        "method" => null,
+        "data" => null,
+        "content_type" => "Automatic",
+    ];
     private $curl;
     private array $options;
     protected string $params;
@@ -42,7 +49,7 @@ class Configuration extends Credentials implements ICurl
      * Set options of cUrl with the token defined
      * @param null $token
      */
-    private function bind($token = null)
+    private function bind($token = null): void
     {
         if ($token !== null) {
             $this->options = [
@@ -66,7 +73,7 @@ class Configuration extends Credentials implements ICurl
      * @throws NotUrlException
      * @throws AuthException
      */
-    private function setUrl($url)
+    private function setUrl($url): void
     {
         if (trim(trim($url, '/'), "\\") === "" || strpos($url, "..") !== false) {
             throw new NotUrlException("The URI provided is invalid, make a valid route of API is impossible");
@@ -77,29 +84,51 @@ class Configuration extends Credentials implements ICurl
         $this->curl = curl_init();
         $this->requested_url = self::$website . $url;
         $this->bind(self::$token);
-        $this->options[CURLOPT_URL] = self::$website . $url;
+        $this->requested_data['url'] = $this->requested_url;
+        $this->options[CURLOPT_URL] = $this->requested_url;
     }
 
     /**
      * @param string $method
      */
-    private function setMethod(string $method = "GET")
+    private function setMethod(string $method = "GET"): void
     {
+        $this->requested_data['method'] = $method;
         $this->options[CURLOPT_CUSTOMREQUEST] = $method;
+    }
+
+    /**
+     * @param string $type
+     */
+    private function setContentType(string $type): void
+    {
+        $this->requested_data['content_type'] = "Content-Type: " . $type;
+        $this->options[CURLOPT_HTTPHEADER][] = "Content-Type: " . $type;
     }
 
     /**
      * @param array $data
      */
-    private function setPostFields(array $data)
+    private function setPostFields(array $data): void
     {
+        $this->requested_data['data'] = $data;
         $this->options[CURLOPT_POSTFIELDS] = $data;
+    }
+
+    /**
+     * @param array $data
+     */
+    private function setPutFields(array $data): void
+    {
+        $json = json_encode($data);
+        $this->requested_data['data'] = $json;
+        $this->options[CURLOPT_POSTFIELDS] = $json;
     }
 
     /**
      * @throws NotUrlException
      */
-    private function config()
+    private function config(): void
     {
         if (!isset($this->options[CURLOPT_URL])) {
             throw new NotUrlException("A valid URL is needed");
@@ -131,11 +160,22 @@ class Configuration extends Credentials implements ICurl
             throw new AuthException("The provided token doesn't have enough permissions to access to this resource.");
         } elseif (isset($response->exception)) {
             throw new APIException("Hmm! Looks like a joke but sorry it's real my friend. An error occurred in the API.");
-        }
-        elseif ($response->message === "") {
+        } elseif ($response->message === "") {
             return false;
         }
         return true;
+    }
+
+    /**
+     * @param $response
+     * @return bool
+     */
+    private function isInvalidData($response): bool
+    {
+        if (isset($response->errors) && is_array($response->errors) && count($response->errors) > 0) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -156,11 +196,15 @@ class Configuration extends Credentials implements ICurl
             dd(curl_error($this->curl), curl_errno($this->curl));
         }
         curl_close($this->curl);
-
         $object = json_decode($response, true);
         $response = new Danidoble();
         foreach ($object as $key => $value) {
             $response->{$key} = $value;
+        }
+        if ($this->isInvalidData($response)) {
+            $error = new Danidoble();
+            $error->error = (new ErrorResponse($response, $this->requested_data));
+            return $error;
         }
         if ($this->validateResponse($response)) {
             return $response;

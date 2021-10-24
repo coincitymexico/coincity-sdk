@@ -30,7 +30,8 @@ trait Delete
         $this->setParams($json);
         $this->setUrl($route . $this->params);
         $this->setMethod("DELETE");
-        $this->setPostFields($data);
+        $this->setContentType("application/json");
+        $this->setPutFields($data);
         return $this->response();
     }
 }
