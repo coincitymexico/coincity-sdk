@@ -14,19 +14,19 @@ use Coincity\SDK\Exceptions\AuthException;
 use Coincity\SDK\Exceptions\MethodException;
 use Coincity\SDK\Exceptions\NotFoundException;
 use Coincity\SDK\Exceptions\NotUrlException;
-use Coincity\SDK\Fun\Attr\AttributesUser;
-use Coincity\SDK\Fun\Interfaces\IParser;
+use Coincity\SDK\Fun\Attr\AttributesStockSync;
 use Coincity\SDK\Fun\Interfaces\IModel;
+use Coincity\SDK\Fun\Interfaces\IParser;
 use Coincity\SDK\Fun\Traits\ParentParser;
 use Coincity\SDK\Fun\Update\Updater;
 use Coincity\SDK\Traits\Models\Magic;
 use Danidoble\Danidoble;
 
-class User extends Configuration implements IModel, IParser
+class StockSync extends Configuration implements IModel, IParser
 {
     use Magic, ParentParser;
 
-    public AttributesUser $attributes;
+    public AttributesStockSync $attributes;
 
     /**
      * @param string|null $token
@@ -43,7 +43,7 @@ class User extends Configuration implements IModel, IParser
      */
     private function setAttributes()
     {
-        $this->attributes = new AttributesUser();
+        $this->attributes = new AttributesStockSync();
     }
 
     /**
@@ -57,7 +57,7 @@ class User extends Configuration implements IModel, IParser
      */
     private static function getter(string $route, array $params = []): Danidoble
     {
-        return (new User())->get($route, json_encode($params));
+        return (new StockSync())->get($route, json_encode($params));
     }
 
     /**
@@ -92,10 +92,10 @@ class User extends Configuration implements IModel, IParser
      */
     public static function findById(int $id)
     {
-        $data = self::getter('user/' . $id);
-        $arr = (new User())->attributes->getNamesArray();
+        $data = self::getter('sae-stock-sync/' . $id);
+        $arr = (new StockSync())->attributes->getNamesArray();
         if (isset($data->response) && is_array($data->response)) {
-            return new Updater($data->response, $arr, User::class);
+            return new Updater($data->response, $arr, StockSync::class);
         }
         return $data;
     }
@@ -110,13 +110,13 @@ class User extends Configuration implements IModel, IParser
      */
     public static function getPaginated(int $page = 1)
     {
-        $data = self::getter('user', ['page' => $page]);
-        $arr = (new User())->attributes->getNamesArray();
+        $data = self::getter('sae-stock-sync', ['page' => $page]);
+        $arr = (new StockSync())->attributes->getNamesArray();
         if (isset($data->response['data'])) {
             $dx = new Danidoble();
             $dx->response = [];
             foreach ($data->response['data'] as $response) {
-                $dx->response[] = new Updater($response, $arr, User::class);
+                $dx->response[] = new Updater($response, $arr, StockSync::class);
             }
             return $dx;
         }
@@ -134,25 +134,25 @@ class User extends Configuration implements IModel, IParser
     public function save()
     {
         /*
-         * Update user only if the attributes has the identifier
+         * Update Stock Sync only if the attributes has the identifier
          */
-        if (isset($this->attributes->id)) { // update user
+        if (isset($this->attributes->id)) { // update Stock Sync
             $data = $this->attributes->toReal();
             foreach ($data as $key => $value) {
                 if ($value === null) {
                     unset($data[$key]);
                 }
             }
-            $result = $this->setter('PUT', 'user/' . $this->attributes->getId(), $data);
-            $arr = (new User())->attributes->getNamesArray();
+            $result = $this->setter('PUT', 'sae-stock-sync/' . $this->attributes->getId(), $data);
+            $arr = (new StockSync())->attributes->getNamesArray();
             if (isset($result->response) && is_array($result->response)) {
-                return new Updater($result->response, $arr, User::class);
+                return new Updater($result->response, $arr, StockSync::class);
             }
             return $result;
         }
 
         /*
-         * Add new user
+         * Add new Stock Sync
          */
         $data = $this->attributes->toReal();
         if (isset($data['_def_val'])) {
@@ -165,10 +165,10 @@ class User extends Configuration implements IModel, IParser
                 }
             }
         }
-        $result = $this->setter('POST', 'user', $data);// new user
-        $arr = (new User())->attributes->getNamesArray();
+        $result = $this->setter('POST', 'sae-stock-sync', $data);// new Stock Sync
+        $arr = (new StockSync())->attributes->getNamesArray();
         if (isset($result->response) && is_array($result->response)) {
-            return new Updater($result->response, $arr, User::class);
+            return new Updater($result->response, $arr, StockSync::class);
         }
         return $result;
     }
@@ -184,19 +184,19 @@ class User extends Configuration implements IModel, IParser
     {
         if (!isset($this->attributes->id)) {
             $error = new Danidoble();
-            $error->message = "The identifier of user is required to delete";
+            $error->message = "The identifier of Stock Sync is required to delete";
             $error->error = true;
             $error->errors = [
-                "id" => "The identifier of user is required to delete"
+                "id" => "The identifier of Stock Sync is required to delete"
             ];
             return $error;
         }
 
 
-        $result = $this->delete('user/' . $this->attributes->getId(), []);
-        $arr = (new User())->attributes->getNamesArray();
+        $result = $this->delete('sae-stock-sync/' . $this->attributes->getId(), []);
+        $arr = (new StockSync())->attributes->getNamesArray();
         if (isset($result->response) && is_array($result->response)) {
-            return new Updater($result->response, $arr, User::class);
+            return new Updater($result->response, $arr, StockSync::class);
         }
         return $result;
     }
