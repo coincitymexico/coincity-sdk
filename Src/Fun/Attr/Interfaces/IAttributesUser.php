@@ -211,4 +211,9 @@ interface IAttributesUser
      * @param bool|null $restore_this
      */
     public function setRestoreThis(?bool $restore_this): void;
+
+    /**
+     * @return array|string[]
+     */
+    public function getNamesArray(): array;
 }

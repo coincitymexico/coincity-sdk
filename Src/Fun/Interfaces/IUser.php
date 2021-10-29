@@ -8,19 +8,17 @@
 
 namespace Coincity\SDK\Fun\Interfaces;
 
-use Danidoble\Danidoble;
-
 interface IUser
 {
     /**
-     * @return Danidoble
+     * @return mixed
      */
-    public static function getPaginated(): Danidoble;
+    public static function getPaginated();
 
     /**
      * @param int $id
-     * @return Danidoble
+     * @return mixed
      */
-    public static function findById(int $id): Danidoble;
+    public static function findById(int $id);
 
 }

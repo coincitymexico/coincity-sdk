@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d71a52fcd92932db3a96fc386575cace",
+    "content-hash": "0992bf87db2073cade7c828ab7b42457",
     "packages": [
         {
             "name": "danidoble/phpobject",
-            "version": "v0.0.5",
+            "version": "v0.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/danidoble/phpobject.git",
-                "reference": "a994eaac4aad234cfd1b22f5a40941e9b57f3020"
+                "reference": "c2f5ac9ad003db5de05cedaa89f4122a43f9b79c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danidoble/phpobject/zipball/a994eaac4aad234cfd1b22f5a40941e9b57f3020",
-                "reference": "a994eaac4aad234cfd1b22f5a40941e9b57f3020",
+                "url": "https://api.github.com/repos/danidoble/phpobject/zipball/c2f5ac9ad003db5de05cedaa89f4122a43f9b79c",
+                "reference": "c2f5ac9ad003db5de05cedaa89f4122a43f9b79c",
                 "shasum": ""
             },
             "require": {
@@ -53,9 +53,9 @@
             ],
             "support": {
                 "issues": "https://github.com/danidoble/phpobject/issues",
-                "source": "https://github.com/danidoble/phpobject/tree/v0.0.5"
+                "source": "https://github.com/danidoble/phpobject/tree/v0.0.6"
             },
-            "time": "2021-09-25T23:26:02+00:00"
+            "time": "2021-10-28T13:41:38+00:00"
         },
         {
             "name": "psr/log",

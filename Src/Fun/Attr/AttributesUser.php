@@ -29,6 +29,7 @@ class AttributesUser extends AParser implements IAttributesUser, IParser
      * @var array|string[]
      */
     private array $public = [
+        'id',
         'name',
         'last_name',
         'email',
@@ -52,6 +53,7 @@ class AttributesUser extends AParser implements IAttributesUser, IParser
      * @var array|string[]
      */
     private array $_real_name = [
+        'id' => 'id_usuario',
         'name' => 'nombre',
         'last_name' => 'apellido',
         'email' => 'email',
@@ -74,6 +76,12 @@ class AttributesUser extends AParser implements IAttributesUser, IParser
 
     private array $_append_const = [
         "ref"
+    ];
+    public array $_def_val = [
+        //"user_type"=>11,
+        "tipo" => 11,
+        "ref" => 146,
+        "status" => 0,
     ];
 
     /**
@@ -160,18 +168,19 @@ class AttributesUser extends AParser implements IAttributesUser, IParser
     protected ?string $profile_photo_path = null;
     /**
      * Type of user, don't modify if the user it's a client
-     * @var int
+     * @var int|null
      */
-    protected int $user_type = 11; //tipo
+    protected ?int $user_type = null; //tipo -> 11
     /**
      * Constant of origin of register, if it's an update this is ignored
+     * @var int|null
      */
-    private int $ref = 146; //ref
+    private ?int $ref = null; //ref -> 146
     /**
      * Status of user, [0 = disabled] [1 = enabled]
-     * @var int
+     * @var int|null
      */
-    protected int $status = 0;
+    protected ?int $status = null; // -> 0
     /**
      * @var bool|null
      */
@@ -498,5 +507,13 @@ class AttributesUser extends AParser implements IAttributesUser, IParser
     public function setRestoreThis(?bool $restore_this): void
     {
         $this->restore_this = $restore_this;
+    }
+
+    /**
+     * @return array|string[]
+     */
+    public function getNamesArray(): array
+    {
+        return $this->_real_name;
     }
 }

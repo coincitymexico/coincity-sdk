@@ -18,6 +18,7 @@ use Coincity\SDK\Fun\Attr\AttributesUser;
 use Coincity\SDK\Fun\Interfaces\IParser;
 use Coincity\SDK\Fun\Interfaces\IUser;
 use Coincity\SDK\Fun\Traits\ParentParser;
+use Coincity\SDK\Fun\Update\Updater;
 use Coincity\SDK\Traits\Models\Magic;
 use Danidoble\Danidoble;
 
@@ -83,54 +84,103 @@ class User extends Configuration implements IUser, IParser
 
     /**
      * @param int $id
-     * @return Danidoble
+     * @return Danidoble|Updater
      * @throws AuthException
      * @throws AuthenticityException
      * @throws NotFoundException
      * @throws NotUrlException
      */
-    public static function findById(int $id): Danidoble
+    public static function findById(int $id)
     {
-        return self::getter('user/' . $id);
+        $data = self::getter('user/' . $id);
+        $arr = (new User())->attributes->getNamesArray();
+        if (isset($data->response) && is_array($data->response)) {
+            return new Updater($data->response, $arr, User::class);
+        }
+        return $data;
     }
 
     /**
      * @param int $page
-     * @return Danidoble
+     * @return Danidoble|Updater
      * @throws AuthException
      * @throws AuthenticityException
      * @throws NotFoundException
      * @throws NotUrlException
      */
-    public static function getPaginated(int $page = 1): Danidoble
+    public static function getPaginated(int $page = 1)
     {
-        return self::getter('user', ['page' => $page]);
+        $data = self::getter('user', ['page' => $page]);
+        $arr = (new User())->attributes->getNamesArray();
+        if (isset($data->response['data'])) {
+            $dx = new Danidoble();
+            $dx->response = [];
+            foreach ($data->response['data'] as $response) {
+                $dx->response[] = new Updater($response, $arr, User::class);
+            }
+            return $dx;
+        }
+        return $data;
     }
 
     /**
-     * @return Danidoble
+     * @return Danidoble|Updater
      * @throws AuthException
      * @throws AuthenticityException
      * @throws MethodException
      * @throws NotFoundException
      * @throws NotUrlException
      */
-    public function save(): Danidoble
+    public function save()
     {
+        /*
+         * Update user only if the attributes has the identifier
+         */
         if (isset($this->attributes->id)) { // update user
-            return $this->setter('PUT', 'user/' . $this->attributes->getId(), $this->attributes->toReal());
+            $data = $this->attributes->toReal();
+            foreach ($data as $key => $value) {
+                if ($value === null) {
+                    unset($data[$key]);
+                }
+            }
+            $result = $this->setter('PUT', 'user/' . $this->attributes->getId(), $data);
+            $arr = (new User())->attributes->getNamesArray();
+            if (isset($result->response) && is_array($result->response)) {
+                return new Updater($result->response, $arr, User::class);
+            }
+            return $result;
         }
-        return $this->setter('POST', 'user', $this->attributes->toReal());// new user
+
+        /*
+         * Add new user
+         */
+        $data = $this->attributes->toReal();
+        if (isset($data['_def_val'])) {
+            unset($data['_def_val']);
+        }
+        foreach ($data as $key => $value) {
+            foreach ($this->attributes->_def_val as $key_def => $val_def) {
+                if ($key === $key_def && $value === null) {
+                    $data[$key] = $val_def;
+                }
+            }
+        }
+        $result = $this->setter('POST', 'user', $data);// new user
+        $arr = (new User())->attributes->getNamesArray();
+        if (isset($result->response) && is_array($result->response)) {
+            return new Updater($result->response, $arr, User::class);
+        }
+        return $result;
     }
 
     /**
-     * @return Danidoble
+     * @return Danidoble|Updater
      * @throws AuthException
      * @throws AuthenticityException
      * @throws NotFoundException
      * @throws NotUrlException
      */
-    public function drop(): Danidoble
+    public function drop()
     {
         if (!isset($this->attributes->id)) {
             $error = new Danidoble();
@@ -141,6 +191,13 @@ class User extends Configuration implements IUser, IParser
             ];
             return $error;
         }
-        return $this->delete('user/' . $this->attributes->getId(), []);
+
+
+        $result = $this->delete('user/' . $this->attributes->getId(), []);
+        $arr = (new User())->attributes->getNamesArray();
+        if (isset($result->response) && is_array($result->response)) {
+            return new Updater($result->response, $arr, User::class);
+        }
+        return $result;
     }
 }
