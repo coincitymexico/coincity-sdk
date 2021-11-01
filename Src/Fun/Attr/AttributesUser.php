@@ -13,20 +13,21 @@ use Coincity\SDK\Fun\Attr\Interfaces\IAttributesUser;
 use Coincity\SDK\Fun\Interfaces\IParser;
 use Coincity\SDK\Fun\Traits\MagicMethods;
 use Coincity\SDK\Fun\Traits\Parser;
+use Coincity\SDK\Fun\Traits\TAttributes;
 
 class AttributesUser extends AParser implements IAttributesUser, IParser
 {
-    use MagicMethods, Parser;
+    use MagicMethods, Parser, TAttributes;
 
     /**
-     * @var array|string[]
+     * @var array
      */
     private array $protected = [
         'password',
         'password_confirm',
     ];
     /**
-     * @var array|string[]
+     * @var array
      */
     private array $public = [
         'id',
@@ -50,7 +51,7 @@ class AttributesUser extends AParser implements IAttributesUser, IParser
         'restore_this',
     ];
     /**
-     * @var array|string[]
+     * @var array
      */
     private array $_real_name = [
         'id' => 'id_usuario',
@@ -181,10 +182,7 @@ class AttributesUser extends AParser implements IAttributesUser, IParser
      * @var int|null
      */
     protected ?int $status = null; // -> 0
-    /**
-     * @var bool|null
-     */
-    protected ?bool $restore_this = null;
+
 
 //    /**
 //     * Discount of user in all orders
@@ -481,39 +479,5 @@ class AttributesUser extends AParser implements IAttributesUser, IParser
     public function setStatus(int $status): void
     {
         $this->status = $status;
-    }
-
-    /**
-     * @return array|string[]
-     */
-    public function getProtected(): array
-    {
-        return $this->protected;
-    }
-
-    /**
-     * @param array|string[] $protected
-     */
-    public function setProtected(array $protected): void
-    {
-        $this->protected = $protected;
-    }
-
-    public function getRestoreThis(): ?bool
-    {
-        return $this->restore_this;
-    }
-
-    public function setRestoreThis(?bool $restore_this): void
-    {
-        $this->restore_this = $restore_this;
-    }
-
-    /**
-     * @return array|string[]
-     */
-    public function getNamesArray(): array
-    {
-        return $this->_real_name;
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 use Coincity\SDK\Curl\Configuration;
-use Coincity\SDK\Fun\StockSync;
+use Coincity\SDK\Fun;
 use Symfony\Component\ErrorHandler\Debug;
 
 include_once __DIR__ . '/../vendor/autoload.php';
@@ -15,7 +15,11 @@ $sdk->setToken('pxzgpvDe8PR0OUOUeH9OAeZjBNgkNghbtrg4l0i0');
 $sdk->setSsl(false);
 $sdk->setWebsite("https://localhost/coincity/dash/api");
 
-$stock = new StockSync();
+
+
+dd("PERATE QUE NO TENGO NADA PREPARADO AQUI");
+
+$stock = new Fun\StockSync();
 $stock->attributes->setCveSae("PROBANDO ANDO");
 $stock->attributes->setDown(1);
 $stock = $stock->save();

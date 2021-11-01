@@ -13,19 +13,20 @@ use Coincity\SDK\Fun\Attr\Interfaces\IAttributesStockSync;
 use Coincity\SDK\Fun\Interfaces\IParser;
 use Coincity\SDK\Fun\Traits\MagicMethods;
 use Coincity\SDK\Fun\Traits\Parser;
+use Coincity\SDK\Fun\Traits\TAttributes;
 
 class AttributesStockSync extends AParser implements IAttributesStockSync, IParser
 {
-    use MagicMethods, Parser;
+    use MagicMethods, Parser, TAttributes;
 
     /**
-     * @var array|string[]
+     * @var array
      */
     private array $protected = [
 
     ];
     /**
-     * @var array|string[]
+     * @var array
      */
     private array $public = [
         'cve_sae',
@@ -33,7 +34,7 @@ class AttributesStockSync extends AParser implements IAttributesStockSync, IPars
         'up',
     ];
     /**
-     * @var array|string[]
+     * @var array
      */
     private array $_real_name = [
         'cve_sae' => 'cve_sae',
@@ -132,29 +133,5 @@ class AttributesStockSync extends AParser implements IAttributesStockSync, IPars
     public function setUp(int $up): void
     {
         $this->up = $up;
-    }
-
-    /**
-     * @return array|string[]
-     */
-    public function getProtected(): array
-    {
-        return $this->protected;
-    }
-
-    /**
-     * @param array|string[] $protected
-     */
-    public function setProtected(array $protected): void
-    {
-        $this->protected = $protected;
-    }
-
-    /**
-     * @return array|string[]
-     */
-    public function getNamesArray(): array
-    {
-        return $this->_real_name;
     }
 }

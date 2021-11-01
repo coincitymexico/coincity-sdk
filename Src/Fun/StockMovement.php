@@ -8,26 +8,26 @@
 
 namespace Coincity\SDK\Fun;
 
-use Coincity\SDK\Fun\Attr\AttributesStockSync;
+use Coincity\SDK\Fun\Attr\AttributesStockMovement;
 use Coincity\SDK\Fun\Interfaces\IModel;
 use Coincity\SDK\Fun\Interfaces\IParser;
 use Coincity\SDK\Models;
 use Danidoble\Danidoble;
 
-class StockSync extends Models implements IModel, IParser
+class StockMovement extends Models implements IModel, IParser
 {
     /**
-     * @var AttributesStockSync
+     * @var AttributesStockMovement
      */
-    public AttributesStockSync $attributes;
+    public AttributesStockMovement $attributes;
     /**
      * @var string|null
      */
-    static public ?string $class_name = StockSync::class;
+    static public ?string $class_name = StockMovement::class;
     /**
      * @var string|null
      */
-    static public ?string $api_uri = "sae-stock-sync";
+    static public ?string $api_uri = "sae-stock-movement";
 
     /**
      * @param string|null $token
@@ -44,7 +44,7 @@ class StockSync extends Models implements IModel, IParser
      */
     private function setAttributes()
     {
-        $this->attributes = new AttributesStockSync();
+        $this->attributes = new AttributesStockMovement();
     }
 
     /**
@@ -57,7 +57,6 @@ class StockSync extends Models implements IModel, IParser
     }
 
     /**
-     * Search by identifier
      * @param int $id
      * @return Update\Updater|Danidoble|mixed
      */
@@ -68,7 +67,6 @@ class StockSync extends Models implements IModel, IParser
     }
 
     /**
-     * Get multiple data paginated
      * @param int $page
      * @return Danidoble|mixed
      */

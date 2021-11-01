@@ -32,6 +32,11 @@ class ErrorResponse
         return $this;
     }
 
+    /**
+     * @param $response
+     * @param array $curl
+     * @return $this
+     */
     public function bind($response, array $curl): ErrorResponse
     {
         $this->message = $response->message;
@@ -39,23 +44,33 @@ class ErrorResponse
         $this->errors = $response->errors;
         $this->request = new ErrorResponse();
         $this->request->url = $curl['url'];
-        $this->request->method = $curl['method'];
+        $this->request->method = $curl['method'] === null ? "GET" : $curl['method'];
         $this->request->content_type = $curl['content_type'];
         $this->request->data = $curl['data'];
-
         return $this;
     }
 
+    /**
+     * @return false|string
+     */
     public function __toString()
     {
         return json_encode($this);
     }
 
+    /**
+     * @param $name
+     * @param $value
+     */
     public function __set($name, $value)
     {
         $this->{$name} = $value;
     }
 
+    /**
+     * @param $name
+     * @return null
+     */
     public function __get($name)
     {
         if (isset($this->{$name})) {
@@ -64,6 +79,10 @@ class ErrorResponse
         return null;
     }
 
+    /**
+     * @param $name
+     * @return bool
+     */
     public function __isset($name)
     {
         if (isset($this->{$name})) {
