@@ -17,18 +17,22 @@ $sdk->setWebsite("https://localhost/coincity/dash/api");
 ```
 
 ## Available Models at the moment
+
 ```php
-\Coincity\SDK\Fun\User::class;
-\Coincity\SDK\Fun\Search::class;
-\Coincity\SDK\Fun\SearchCookie::class;
-\Coincity\SDK\Fun\Stock::class;
-\Coincity\SDK\Fun\StockSync::class;
-\Coincity\SDK\Fun\StockMovement::class;
-\Coincity\SDK\Fun\Category::class;
-\Coincity\SDK\Fun\SubCategory::class;
-\Coincity\SDK\Fun\SubCategoryMachine::class;
-\Coincity\SDK\Fun\Brands::class;
-\Coincity\SDK\Fun\Model::class;
+use \Coincity\SDK\Fun; 
+
+Fun\User::class;
+Fun\Search::class;
+Fun\SearchCookie::class;
+Fun\Stock::class;
+Fun\StockSync::class;
+Fun\StockMovement::class;
+Fun\Category::class;
+Fun\SubCategory::class;
+Fun\SubCategoryMachine::class;
+Fun\Brands::class;
+Fun\Model::class;
+
 // ... wait for more
 ```
 
@@ -98,13 +102,13 @@ $result = $user->save();
 ```
 
 ## Stock
+
 ```php
 $stock = new StockSync();
 $stock->attributes->setCveSae("PROBANDO ANDO");
 $stock->attributes->setDown(1);
 $stock = $stock->save();
 ```
-
 
 My GitHub [danidoble](https://github.com/danidoble)
 
